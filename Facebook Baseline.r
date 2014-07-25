@@ -40,5 +40,8 @@ ggplot(Reachface,aes(x=n.week,y=percent13.34)) +
   labs(title = "Weekly 13-34 Reach - October '13 - June '14",x="Week",y="Percent of Individuals Aged 13-34")+
   ylim(0,1)
 
+# Plot Average per Group
+ggplot(df, aes(x=factor(age), y=score)) + stat_summary(fun.y="mean", geom="bar")
+
 # Export data after creating new variables
 write.csv(Reachface,"Reachface.csv")
