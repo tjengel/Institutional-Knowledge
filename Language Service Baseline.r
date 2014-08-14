@@ -7,7 +7,7 @@ bbg <- GetReportSuites()
 seg <- GetSegments("bbgunitvoakurdish")
 
 # QueueOvertime gets metric(s) overtime, QueueTrended gets same plus an element
-ash <- QueueOvertime("bbgunitvoakurdi","2014-03-16","2014-06-28",segment_id="All Visits",metrics=c("event3","event5"),"week")
+q <- QueueOvertime("bbgunitvoaturkish","2013-09-29","2014-06-28",segment_id="All Visits","visits","week")
 trend <- QueueTrended("bbgunitvoakurdish",dateFrom="2013-09-29",dateTo="2014-06-28","week","visits","geocountry",segment_id="All Visits")
 n.week <- c(1:15)
 n.hour <- c(1:6552)
