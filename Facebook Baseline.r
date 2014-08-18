@@ -1,11 +1,12 @@
 Load Data
 
+# Loads packages required for analysis
 library(ggplot2)
 library(reshape2)
 library(plyr)
 library(scales)
 
-# Edits data imported from Facebook
+# Edits data imported from Facebook/variables can also be created with excel before import
 Reachface$m13.34percent <- Reachface$m13.34total/Reachface$mtotal
 Reachface$total <- Reachface$mtotal+Reachface$ftotal
 Reachface$mpercent <- Reachface$mtotal/Reachface$total
@@ -16,23 +17,26 @@ viface$total.13.34 <- viface$m.13.34.total + viface$f.13.34.total
 viface$percent.13.34 <- viface$total.13.34/viface$total
 swahili$f.percent.all <- swahili$f.13.34total/swahili$total
 
-# Date transformation
+# Date transformation-Used for making stacked area charts
 fabook <- reshape(vbook,varying=c("f.percent","m.percent"),v.names="Percent",timevar = "Date",times = c("f.percent","m.percent"),direction = "long")
 
 # Not sure if I need this
 fabook <- melt(vbook,value.name="value")
 
-# Turns data from data into R data object
+# Turns date from data into R date object
 kbook$date <- as.Date(kbook$date,format="%m/%d/%Y")
 
-# Rename factor levels using plyr package
+# Rename factor levels using plyr package-revalue changes labels of variables so they are readable on graph
 fabook$Date <- revalue(fabook$Date, c("f.percent"="Female Percent", "m.percent"="Male Percent"))
+
+# as.factor turns a variable into a factor, levels creates levels for factor
 fabook$Date <-as.factor(fabook$Date)
 fabook$Date <- factor(fabook$Date, levels = rev(levels(fabook$Date)))
 tube$Week <- as.Date(cut(tube$Date,breaks = "week"),start.on.monday = TRUE)
+# ddply command sums whatever is in the sums command by what is given after the period
 plyt <- ddply(vtype, .(device.type), summarize, plays=sum(plays))
 
-# Date plotting
+# Date plotting-use if plotting when date is on the x-axis (pretty common) aes(x axis,y axis)
 ggplot(data = kbook,aes(date, engagement.rate)) +  
   stat_summary(fun.y = sum,geom = "point",color="blue",size=3)+
   scale_x_date(labels = date_format("%m/%d/%Y"),breaks = "2 weeks")+
@@ -81,7 +85,8 @@ ggplot(Reachface,aes(x=n.week,y=percent13.34)) +
   labs(title = "Weekly 13-34 Reach - October '13 - June '14",x="Week",y="Percent of Individuals Aged 13-34")+
   ylim(0,1)
 
-# Loess Smoothing
+# Loess Smoothing (Fits non-linear line to data) 
+# span command changes how fitted the line is
 ggplot(swahili,aes(x=n.date,y=total13.34)) +
   geom_point(size=2,color="blue") +
   theme(axis.text.x = element_text(size=13)) +
@@ -97,13 +102,14 @@ ggplot(h, aes(x=factor(hour), y=visits),color="blue")) + stat_summary(fun.y="mea
   theme(axis.text.y = element_text(hjust = 1, size=13)) +
   labs(title = "Average Hourly Visits October '13 - June '14",x="Hour",y="Average Number of Visits")
 
-# Plot by device type
+# Plot by device type (group and color commands provide the color from whatever the factor is)
 ggplot(data = vtype, aes(x = week, y = video.views, group=device.type,colour = device.type)) + geom_line(size=1.5)+
   theme(axis.text.x = element_text(size=13,angle=90)) +
   theme(axis.text.y = element_text(hjust = 1, size=13)) +
   labs(title = "Weekly Video Views by Device March  - June 2014",x="Week",y="Video Views")
 
-# Hour factor plot
+# Hour factor plot (used to make night-day plot of the hourly plot)
+# < > are used to set night and day hours for given country/region
 camh$Time <- camh$hour
 camh$Time[camh$Time<11] <- 2
 camh$Time[camh$Time>17] <- 2
