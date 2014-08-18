@@ -2,19 +2,21 @@
 library(RSiteCatalyst)
 SCAuth("username:company","secret key")
 
-# Get report suites and metrics
+# Get report suites and metrics (only need these if you want to see what's available)
 bbg <- GetReportSuites()
 seg <- GetSegments("bbgunitvoakurdish")
 
 # QueueOvertime gets metric(s) overtime, QueueTrended gets same plus an element
 q <- QueueOvertime("bbgunitvoaturkish","2013-09-29","2014-06-28",segment_id="All Visits","visits","week")
 trend <- QueueTrended("bbgunitvoakurdish",dateFrom="2013-09-29",dateTo="2014-06-28","week","visits","geocountry",segment_id="All Visits")
-# Creates variable of length 39 to plot weeks
-n.week <- c(1:39)
-n.hour <- c(1:6552)
-q <- data.frame(q,n.week)
+# Creates date variable of length 39 to plot weeks
+date <- seq(as.Date("2013-09-29"),length=39,by="weeks")
 
-# Descriptive Statistics
+n.hour <- c(1:6552)
+# Creates data frame with data from adobe and date object
+q <- data.frame(q,date)
+
+# Descriptive Statistics-Use for analyzing numbers in baseline
 mean(q$visits)
 # Highlights which is the max
 which.max(q[,6])
