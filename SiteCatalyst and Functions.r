@@ -48,6 +48,23 @@ f <- function(i){
 return(l)
 }
 
+# Gets weekly visits, pageviews per visit, and weekly visitors
+func <- function(i){ 
+  average.visits <- vector(length = length(i))
+  pageviews.visit <- vector(length = length(i))
+  weekly.visitors <- vector(length = length(i))
+  for(i in 1:502){
+    visits <- QueueOvertime(rs[i],"2013-09-29","2014-09-27",metrics=c("visits","pageviews","visitorsweekly"),"week")
+    x <- mean(visits$visits)
+    y <- sum(visits$pageviews)/sum(visits$visits)
+    z <- sum(visits$visitorsweekly)/nrow(visits)
+    average.visits[i] <- print(x)
+    pageviews.visit[i] <- print(y)
+    weekly.visitors[i] <- print(z)
+  }
+  return(data.frame(average.visits,pageviews.visit,weekly.visitors))
+}
+
 # Average Visits Function
 f2 <- function(i){ 
   l <- vector(length = length(i))
