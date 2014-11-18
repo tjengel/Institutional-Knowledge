@@ -48,6 +48,7 @@ f <- function(i){
 return(l)
 }
 
+# Use this one for getting the quarterly and yearly numbers: update the 1:502 to reflect however many report suites we have when you run
 # Gets weekly visits, pageviews per visit, and weekly visitors
 func <- function(i){ 
   average.visits <- vector(length = length(i))
